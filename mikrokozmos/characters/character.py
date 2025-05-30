@@ -17,11 +17,11 @@ def get_gemini_model():
 
 class Character(BaseModel):
     name: str
-    bio: str
-    lore: str
+    bio: List[str]
+    lore: List[str]
     knowledge: List[str]
     topics: List[str]
-    style: str
+    style: Dict[str, List[str]]
     adjectives: List[str]
     clients: List[str] = []
     modelProvider: str = "gemini"
@@ -36,11 +36,11 @@ class Character(BaseModel):
             model = genai.GenerativeModel('gemini-1.5-flash')
             response = model.generate_content(
                 f"""Karakter: {self.name}
-                Biyografi: {self.bio}
-                Arka Plan: {self.lore}
+                Biyografi: {' '.join(self.bio)}
+                Arka Plan: {' '.join(self.lore)}
                 Bilgi: {', '.join(self.knowledge)}
                 Konular: {', '.join(self.topics)}
-                Konuşma Tarzı: {self.style}
+                Konuşma Tarzı: {', '.join(self.style['all'])}
                 Özellikler: {', '.join(self.adjectives)}
                 
                 Bağlam: {context}
