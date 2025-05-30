@@ -10,6 +10,14 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# .env dosyasını yükle
+load_dotenv()
+
+# API anahtarını kontrol et
+if not os.getenv("GEMINI_API_KEY"):
+    st.error("GEMINI_API_KEY bulunamadı. Lütfen Streamlit Cloud'da Secrets ayarlarını kontrol edin.")
+    st.stop()
+
 # Set page config
 st.set_page_config(
     page_title="Toplumsal Mikrokozmos",

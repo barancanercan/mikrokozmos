@@ -3,17 +3,23 @@ from typing import List, Dict
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+import logging
 
-load_dotenv()
+logger = logging.getLogger(__name__)
 
 def get_gemini_model():
     """Gemini modelini yapılandırır ve döndürür."""
     try:
-        genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-        return genai.GenerativeModel("gemini-1.5-flash")
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError("GEMINI_API_KEY bulunamadı. Lütfen .env dosyasını kontrol edin.")
+        
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        return model
     except Exception as e:
-        print(f"Model yapılandırma hatası: {str(e)}")
-        return None
+        logger.error(f"Model yapılandırma hatası: {str(e)}")
+        raise
 
 class Character(BaseModel):
     name: str
@@ -33,7 +39,7 @@ class Character(BaseModel):
 
     def get_response(self, context: str, prompt: str) -> str:
         try:
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            model = get_gemini_model()
             response = model.generate_content(
                 f"""Karakter: {self.name}
                 Biyografi: {' '.join(self.bio)}
@@ -55,12 +61,14 @@ class Character(BaseModel):
             )
             return response.text
         except Exception as e:
-            if "API key" in str(e):
-                return f"Hata: Gemini API anahtarı bulunamadı. Lütfen .env dosyasında GEMINI_API_KEY değişkenini ayarlayın."
-            elif "model" in str(e):
-                return f"Hata: Gemini modeli bulunamadı. Lütfen model adını kontrol edin."
+            error_msg = str(e)
+            if "API key" in error_msg:
+                return "Hata: Gemini API anahtarı bulunamadı veya geçersiz. Lütfen .env dosyasını kontrol edin."
+            elif "model" in error_msg.lower():
+                return "Hata: Model bulunamadı. Lütfen model adını kontrol edin."
             else:
-                return f"Hata: {str(e)}"
+                logger.error(f"Karakter yanıt hatası: {error_msg}")
+                return f"Hata: {error_msg}"
 
     def react_to_event(self, event: str) -> str:
         return self.get_response(
