@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Dict
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
@@ -7,9 +7,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_gemini_model():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    # Gemini 1.5 Flash modelini kullan
-    return genai.GenerativeModel("gemini-1.5-flash")
+    """Gemini modelini yapılandırır ve döndürür."""
+    try:
+        genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+        return genai.GenerativeModel("gemini-1.5-flash")
+    except Exception as e:
+        print(f"Model yapılandırma hatası: {str(e)}")
+        return None
 
 class Character(BaseModel):
     name: str
@@ -24,6 +28,7 @@ class Character(BaseModel):
 
     @property
     def model(self):
+        """Gemini modelini döndürür."""
         return get_gemini_model()
 
     def get_response(self, context: str, prompt: str) -> str:
