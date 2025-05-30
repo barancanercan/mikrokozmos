@@ -18,8 +18,8 @@ Toplumsal Mikrokozmos, farklı toplumsal kesimlerden ve siyasi görüşlerden ge
 
 1. Projeyi klonlayın:
 ```bash
-git clone https://github.com/kullaniciadi/toplumsal-mikrokozmos.git
-cd toplumsal-mikrokozmos
+git clone https://github.com/barancanercan/mikrokozmos.git
+cd mikrokozmos
 ```
 
 2. Sanal ortam oluşturun ve aktifleştirin:
@@ -92,6 +92,6 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 ## 📞 İletişim
 
-Proje Sahibi - [@github_username](https://github.com/github_username)
+Proje Sahibi - [@barancanercan](https://github.com/barancanercan)
 
-Proje Linki: [https://github.com/github_username/toplumsal-mikrokozmos](https://github.com/github_username/toplumsal-mikrokozmos) 
+Proje Linki: [https://github.com/barancanercan/mikrokozmos](https://github.com/barancanercan/mikrokozmos)
